@@ -1,0 +1,10 @@
+.input-sm {
+  width: 80px;
+  padding: 4px 8px;
+}
+
+.input--border {
+  border: solid 2px;
+  border-radius: 4px;
+  border-color: #EF9A9A;
+}

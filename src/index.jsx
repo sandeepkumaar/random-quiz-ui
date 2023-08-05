@@ -5,9 +5,8 @@ import {
   Route
 } from 'react-router-dom'
 
-import './index.css'
-import App, {contactsLoader, createContactAction } from './app';
-import contactRoutes from './contacts/routes';
+import '../css/index.css'
+import App from './app';
 import ErrorPage from './error-page.jsx';
 
 // Routes
@@ -16,12 +15,9 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       path='/'
-      loader={contactsLoader}
-      action={createContactAction}
       element={<App/>}
       errorElement={<ErrorPage/>}
     >
-      {contactRoutes}
       
     </Route>
 
@@ -36,6 +32,5 @@ export default function Root() {
   return (
     <RouterProvider router={router}/>
   )
-
 };
 

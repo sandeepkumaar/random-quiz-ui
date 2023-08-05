@@ -1,0 +1,46 @@
+/* Reference theme */
+
+/*
+.primary {
+  background-color: var(--primary)
+  color: var(--on-primary);
+}
+*/
+
+.primary {
+ --bg: var(--primary);
+ --color: var(--on-primary);
+}
+
+
+.background {
+  --bg: var(--background);
+  --color: var(--on-background);
+}
+
+/*
+.primary-dark {
+  background-color: var(--primary-dark)
+  color: var(--on-primary);
+}
+
+.secondary {
+  background-color: var(--secondary);
+  color: var(--on-secondary);
+}
+.secondary-dark {
+  background-color: var(--secondary-dark);
+  color: var(--on-secondary);
+}
+
+
+.surface {
+  background-color: var(--surface);
+  color: var(--on-surface);
+}
+
+.error {
+  background-color: var(--error);
+  color: var(--on-error);
+}
+*/

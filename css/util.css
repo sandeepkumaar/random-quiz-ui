@@ -1,0 +1,94 @@
+:root {
+  /* row, col implementation detail. can be removed */
+  --ROW: row;
+  --COL: column;
+  /* reqd */
+  --ROW-GUTTER: 0px 16px 16px 0px;
+  --COL-GUTTER: 0px 0px 16px 0px;
+}
+/* flex 1d layout items - common */ 
+.--row {
+  --direction: row;
+  --gutter: var(--ROW-GUTTER);
+}
+.--col {
+  --direction: column; 
+  --gutter: var(--COL-GUTTER);
+}
+
+.full {
+  width: 100%;
+  height: 100%;
+}
+
+/*flex*/
+.flex {
+  display: flex;
+}
+.justify-content-evenly {
+  justify-content: space-evenly;
+}
+.flex-center-lr {
+  margin: 0 auto;
+  --margin: 0 auto;
+}
+.align-items-center {
+  align-items: center;
+}
+
+
+
+/*division*/
+.mb-1 { margin-bottom: 0.5rem; --margin-bottom: 0.5rem}
+.mb-2 { margin-bottom: 1rem; --margin-bottom: 1rem }
+.mb-3 { margin-bottom: 1.5rem; --margin-bottom: 1.5rem }
+.mb-4 { margin-bottom: 2rem; --margin-bottom: 2rem }
+.mb-5 { margin-bottom: 2.5rem; --margin-bottom: 2.5rem }
+
+.mt-1 { margin-top: 0.5rem; --margin-top: 0.5rem }
+.mt-2 { margin-top: 1rem;--margin-top: 1rem }
+.mt-3 { margin-top: 1.5rem;--margin-top: 1.5rem  }
+.mt-4 { margin-top: 2rem;--margin-top: 2rem  }
+.mt-5 { margin-top: 2.5rem;--margin-top: 2.5rem  }
+
+.ml-1 { margin-left: 0.5rem; }
+.ml-2 { margin-left: 1rem; }
+.ml-3 { margin-left: 1.5rem; }
+.ml-4 { margin-left: 2rem; }
+.ml-5 { margin-left: 2.5rem; }
+
+
+/* gutter */
+.mr-4 { margin-right: 0.25rem}
+.mr-8 { margin-right: 0.5rem}
+.mr-16 { margin-right: 1rem }
+
+
+/*text*/
+.text-center { text-align: center }
+
+/*width*/
+.max-width-400 {
+  max-width: 400px;
+  --max-width: 400px;
+}
+.max-width-480 {
+  max-width: 480px;
+  --max-width: 400px;
+}
+.max-width-560 {
+  max-width: 560px;
+  --max-width: 560px;
+}
+
+.max-width-640 {
+  max-width: 640px;
+  --max-width: 640px;
+}
+
+.min-width-400 {
+  min-width: 400px;
+  --min-width: 400px;
+}
+
+

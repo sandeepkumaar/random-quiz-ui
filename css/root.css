@@ -1,0 +1,39 @@
+/* Theme */
+:root {
+  --primary: #c62828;
+  --primary-dark: #b71c1c;
+  --on-primary: #FFEBEE;
+  --secondary: 3, 218, 108;
+  --secondary-dark: 1, 135, 134;
+  --on-secondary: 255, 255, 255;
+  --background: #ffebee2e;
+  --on-background: #b15a5a;
+  --surface: 255, 255, 255;
+  --on-surface: 0, 0, 0;
+  --error: 176, 0, 32;
+  --on-error: 255, 255, 255;
+}
+
+/* component states */
+:root {
+ --active: 1; /*default*/ 
+ --disable: 0.38;
+ --hover: 0.4;
+ --focus: 0.12;
+ --select: 0.12;
+ --press: 0.12;
+ 
+}
+
+/*text-emphasis*/
+:root {
+  --high: 0.87;
+  --medium: 0.60;
+  --low: 0.38;
+}
+
+
+
+
+
+

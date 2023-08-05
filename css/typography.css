@@ -1,0 +1,142 @@
+/**
+ * Typeface are applied globally
+ */
+
+:root {
+  --caption-font-weight: normal;
+  --caption-font-size: 12px;
+  --caption-text-transform: initial;
+  --caption-letter-spacing: 0.4px;
+
+  --sub1-font-weight: normal;
+  --sub1-font-size: 16px;
+  --sub1-text-transform: initial;
+  --sub1-letter-spacing: 0.15px;
+
+  --sub2-font-weight: bold;
+  --sub2-font-size: 14px;
+  --sub2-text-transform: initial;
+  --sub2-letter-spacing: 0.1px;
+}
+
+.h1 {
+  font-weight: lighter;
+  font-size: 96px;
+  text-transform: initial;
+  letter-spacing: -1.5px;
+
+}
+.h2 {
+  font-weight: lighter;
+  font-size: 60px;
+  text-transform: initial;
+  letter-spacing: -0.5px;
+}
+.h3 {
+  font-weight: normal;
+  font-size: 48px;
+  text-transform: initial;
+  letter-spacing: 0px;
+}
+.h4 {
+  font-weight: normal;
+  font-size: 34px;
+  text-transform: initial;
+  letter-spacing: 0.25px;
+}
+.h5 {
+  font-weight: normal;
+  font-size: 24px;
+  text-transform: initial;
+  letter-spacing: 0px;
+}
+/* App heading */
+.h6 {
+  font-weight: bold;
+  font-size: 20px;
+  text-transform: initial;
+  letter-spacing: 0.15px;
+}
+
+/**
+ * Subtitle - label, content heading
+ */
+.sub-1 {
+  font-weight: normal;
+  font-size: 16px;
+  text-transform: initial;
+  letter-spacing: 0.15px;
+}
+
+.sub-2 {
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: initial;
+  letter-spacing: 0.1px;
+}
+
+/**
+ * Paragraph - Contents
+ */
+.body-1 {
+  font-weight: normal;
+  font-size: 16px;
+  text-transform: initial;
+  letter-spacing: 0.5px;
+}
+.body-2 {
+  font-weight: normal;
+  font-size: 14px;
+  text-transform: initial;
+  letter-spacing: 0.25px;
+}
+
+/**
+ * buttons, tabs, dialog actions, cards actions
+ */
+.btn-font {
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+}
+
+/*
+ * annotate imagery(contents)
+ */
+
+.caption {
+  font-weight: normal;
+  font-size: 12px;
+  text-transform: initial;
+  letter-spacing: 0.4px;
+}
+
+.overline {
+  font-weight: normal;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/** Utils **/
+
+/**
+ * Opacity
+ */
+.opac-high{
+  opacity: 0.87;
+}
+.opac-med{
+  opacity: 0.60;
+}
+.opac-low{
+  opacity: 0.38;
+}
+
+/**
+ * Font weights
+ */
+.bold {
+  font-weight: bold;
+}
