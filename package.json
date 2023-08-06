@@ -2,6 +2,7 @@
   "name": "react-starter-vite",
   "version": "1.0.0",
   "description": "react starter with vite + routing + lazy loader + unit tests + functional tests",
+  "type": "module",
   "main": "main.jsx",
   "scripts": {
     "start": "run-s build serve",

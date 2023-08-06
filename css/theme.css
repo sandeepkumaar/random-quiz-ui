@@ -18,16 +18,16 @@
   --color: var(--on-background);
 }
 
+.secondary {
+  background-color: var(--secondary);
+  color: var(--on-secondary);
+}
 /*
 .primary-dark {
   background-color: var(--primary-dark)
   color: var(--on-primary);
 }
 
-.secondary {
-  background-color: var(--secondary);
-  color: var(--on-secondary);
-}
 .secondary-dark {
   background-color: var(--secondary-dark);
   color: var(--on-secondary);
