@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useOutletContext, useLoaderData, useFetcher, useActionData } from 'react-router-dom'
 import { fetchQuestion, updateAnswer }  from '../service';
 
@@ -14,9 +14,28 @@ export async function action({request, params}) {
 }
 
 function Timer({init})  {
+  let [time, setTime] = useState(init);
+  let [ intervalId, setIntervalId ] = useState();
+  useEffect(() => {
+    let intervalId = setInterval(() => {
+      setTime(prev => prev - 1);
+    }, 1000);
+    setIntervalId(intervalId);
+    return function() {
+      clearInterval(intervalId);
+    };
+  }, [init])
+
+  useEffect(() => {
+    console.log('time expired', time, time < 0, intervalId);
+    if(time <= 0) {
+      clearInterval(intervalId);
+    }
+  }, [time])
+
   return (
     <div>
-      <time className='timer'>30</time>
+      <time className='timer'>{time}</time>
     </div>
   )
 };
@@ -51,7 +70,7 @@ export default function QuestionForm() {
     <>
       <section className='feedback flex mb-2 mt-5 min-width-560'>
         <h6 className='h6 flex-max color-blue'>Hint: {hint}</h6>
-        <Timer init={30}/>
+        <Timer init={10}/>
       </section>
       <section className='question-answer '>
         <fetcher.Form method='post'>
