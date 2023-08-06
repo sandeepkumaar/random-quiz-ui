@@ -11,7 +11,7 @@ export async function action({request, params}) {
   let formData = await request.formData();
   let {userAnswerIndex, ...formObj} = Object.fromEntries(formData);
   console.log({userAnswerIndex, ...formObj});
-  return updateAnswer({...formObj, userAnswerIndex: Number(userAnswerIndex)});
+  return updateAnswer({...formObj, userAnswerIndex: Number(userAnswerIndex)})
 }
 
 
@@ -30,13 +30,12 @@ function Feedback({hintMessage, expiredMessage, responseMessage}) {
 }
 
 export default function QuestionForm() {
+  let navigate = useNavigate();
   let { questionList  } = useOutletContext();
   let questionObject = useLoaderData() || {};
-  let actionData = useActionData();
   let fetcher = useFetcher();
   let submit = useSubmit();
   let ref = useRef();
-  let navigate = useNavigate();
 
   let [expiredMessage, setExpiredMessage ] = useState('');
   let [hintMessage, setHintMessage ] = useState('');
@@ -51,6 +50,8 @@ export default function QuestionForm() {
     index,
     answer_index,
   } = questionObject;
+
+
 
   //console.log(questionObject);
   let handleHintTimeEvent = function() {
@@ -81,7 +82,7 @@ export default function QuestionForm() {
     <>
       <section className='feedback flex mb-2 mt-4'>
         <Feedback hintMessage={hintMessage} expiredMessage={expiredMessage} responseMessage={responseMessage}/>
-        <Timer init={initialTimer} onTimerExpiry={handleTimerExpiry} onHintTimeEvent={handleHintTimeEvent}/>
+        <Timer key={id}init={initialTimer} onTimerExpiry={handleTimerExpiry} onHintTimeEvent={handleHintTimeEvent}/>
       </section>
       <section className='question-answer full-width'>
         <fetcher.Form method='post'>
@@ -91,17 +92,16 @@ export default function QuestionForm() {
             </p>
             <div className='input-group flex justify-content-evenly flex-wrap'>
               { choices.map((choice, i) => (
-                <div className='input-container mb-1 mr-2' key={i}>
+                <div className='input-container mb-1 mr-2' key={choice + i}>
                   <input 
                     type='radio' 
                     name='userAnswerIndex' 
                     value={i} 
                     className='mr-1' 
-                    defaultChecked={(i === userAnswerIndex)}
                     disabled={isCorrect !== undefined}
                   >
                   </input>
-                  <label htmlFor='answer' className='color-black'>{choice}</label>
+                  <label htmlFor='userAnswerIndex' className='color-black'>{choice}</label>
                 </div>
               ))
               }
@@ -120,7 +120,6 @@ export default function QuestionForm() {
             </button>
             <button 
               className='btn-md btn--border secondary' 
-              type='submit' 
               name='id' 
               value={id}
               onClick={handleNext}

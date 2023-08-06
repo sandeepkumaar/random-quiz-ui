@@ -1,30 +1,26 @@
-import { Route, Routes, Outlet, useLoaderData, useActionData, useNavigate, useParams } from 'react-router-dom';
+import { Route, Routes, Outlet, useLoaderData, useActionData, useNavigate, useParams} from 'react-router-dom';
 import { useState, useEffect } from 'react'
 
 import { fetchRandomQuestions }  from '../service';
 
 
 export default function App() {
+
   let [ questionList, setQuestionList ] = useState([]);
-  //let [selectedIndex, setSelectedIndex] = useState();
-  //let navigate = useNavigate();
+  let navigate = useNavigate();
+  useEffect(() => {
+    if(!questionList.length) return;
 
-  //useEffect(() => {
-  //  if(!questionList.length && !selectedIndex) return;
-
-  //  let id = questionList[selectedIndex];
-  //  //console.log('effect', id, questionList); 
-  //  navigate(`/questions/${id}`);
-  //}, [selectedIndex, questionList])
+    let id = questionList[0];
+    //console.log('effect', id, questionList); 
+    navigate(`/questions/${id}`);
+  }, [questionList])
 
 
-  //console.log('questionList', questionList);
 
   let handleCountSubmit = function({count}) {
     fetchRandomQuestions(Number(count)).then(resp => {
-      //console.log('resp', resp);
       setQuestionList(resp);
-      //setSelectedIndex(0);
     })
   };
 
@@ -52,3 +48,4 @@ export default function App() {
     </div>
   );
 }
+

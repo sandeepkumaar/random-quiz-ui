@@ -11,8 +11,9 @@ import ErrorPage from './error-page.jsx';
 
 // Routes
 
-import LandingPage from './app/landing-page.jsx';
+import LandingPage  from './app/landing-page.jsx';
 import QuestionForm, {loader as questionLoader, action as updateAnswer } from './app/question-form.jsx';
+//import QuestionLayout from './app/question-layout.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,4 +45,11 @@ export default function Root() {
     <RouterProvider router={router}/>
   )
 };
-
+/*
+<Route
+  path='/questions/:id'
+  element={<QuestionForm />}
+  loader={questionLoader}
+  action={updateAnswer}
+>
+*/
