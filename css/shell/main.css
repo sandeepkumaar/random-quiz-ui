@@ -14,5 +14,6 @@
   padding: 16px;
   background: var(--bg);
   color: var(--color);
+  width: var(--width, 100%);
 
 }

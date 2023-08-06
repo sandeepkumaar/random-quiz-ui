@@ -8,19 +8,17 @@ export default function App() {
   let [ questionList, setQuestionList ] = useState([]);
   let [selectedIndex, setSelectedIndex] = useState();
   let navigate = useNavigate();
-  let params = useParams();
-  console.log('params', params);
 
   useEffect(() => {
     if(!questionList.length && !selectedIndex) return;
 
     let id = questionList[selectedIndex];
-    console.log('effect', id, questionList); 
+    //console.log('effect', id, questionList); 
     navigate(`/questions/${id}`);
   }, [selectedIndex, questionList])
 
 
-  console.log('questionList', questionList);
+  //console.log('questionList', questionList);
 
   let handleCountSubmit = function({count}) {
     fetchRandomQuestions(Number(count)).then(resp => {
@@ -45,8 +43,11 @@ export default function App() {
         <h3 className='header__main h3'>Ancient Rome Quizz</h3>
       </header>
 
-      <main className="app__main main background align-items-center">
-        <Outlet context={{onCountSubmit: handleCountSubmit, onQuestionSubmit: handleQuestionSubmit}}/>
+      <main className="app__main main max-width-720 mr-center background align-items-center">
+        <Outlet context={{
+          onCountSubmit: handleCountSubmit, 
+          onQuestionSubmit: handleQuestionSubmit,
+        }}/>
       </main>
     </div>
   );

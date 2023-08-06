@@ -8,3 +8,10 @@ export async function fetchRandomQuestions(count=0) {
 export async function fetchQuestion(id) {
   return fetchJson(`/random/question/${id}`, { method: 'GET'});
 };
+
+export async function updateAnswer(payload) {
+  return fetchJson(`/random/question/answer`, { 
+    method: 'POST', 
+    body: payload
+  });
+};

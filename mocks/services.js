@@ -1,6 +1,7 @@
 import { rest } from 'msw';
 import { delayRes } from './utils';
 import groupBy from 'just-group-by';
+import localforage from 'localforage';
 
 
 const host = 'http://localhost:4000'
@@ -33,12 +34,17 @@ const randomiseArray = function(arr=[], count=0) {
   return randomArray;
 };
 
-let questionsById = {};
+//let questionsById = {};
 const fetchRandomQuestions = rest.get(`${host}/random/questions`, async function(req, res, ctx) {
   const { count } = Object.fromEntries(req.url.searchParams);
-  let randomQuiz = randomiseArray(questions, Number(count));
-  let ids = randomQuiz.map(({question_id}) => question_id);
-  questionsById = groupBy(randomQuiz, ({question_id}) => question_id);
+  let randomQuizs = randomiseArray(questions, Number(count));
+  randomQuizs = randomQuizs.map((q, index) => ({
+    ...q,
+    index
+  }));
+  let ids = randomQuizs.map(({question_id}) => question_id);
+  let questionsById = groupBy(randomQuizs, ({question_id}) => question_id);
+  await localforage.setItem('questionsById', questionsById);
   //console.log('asdfsdfsfd', questionsById);
   return delayRes(
     ctx.status(200),
@@ -48,6 +54,7 @@ const fetchRandomQuestions = rest.get(`${host}/random/questions`, async function
 
 const fetchQuestion = rest.get(`${host}/random/question/:id`, async function(req, res, ctx) {
   let {id} = req.params;
+  let questionsById = await localforage.getItem('questionsById');
   let question = questionsById[id] ?  questionsById[id][0] : {} ;
 
   return delayRes(
@@ -55,9 +62,31 @@ const fetchQuestion = rest.get(`${host}/random/question/:id`, async function(req
     ctx.json(question)
   )
 })
+
+const updateAnswer = rest.post(`${host}/random/question/answer`, async function(req, res, ctx) {
+  let {id, userAnswerIndex} = req.body;
+  let questionsById = await localforage.getItem('questionsById');
+  let question = questionsById[id] ?  questionsById[id][0] : {} ;
+  
+  let isCorrect = false;
+  if(question.answer_index === userAnswerIndex) {
+    question.isCorrect = true;
+  };
+  question = {...question, isCorrect, userAnswerIndex};
+  
+  questionsById[id] = [question];
+  await localforage.setItem('questionsById', questionsById);
+
+  return delayRes(
+    ctx.status(200),
+    ctx.json(question)
+  )
+})
+
 const handlers = [
   fetchRandomQuestions,
   fetchQuestion,
+  updateAnswer,
 
 ];
 

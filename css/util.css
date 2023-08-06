@@ -24,9 +24,20 @@
 /*flex*/
 .flex {
   display: flex;
+  width: 100%;
+  align-items: center;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-max {
+  flex: 1
 }
 .justify-content-evenly {
   justify-content: space-evenly;
+}
+.justify-content-center {
+  justify-content: center;
 }
 .flex-center-lr {
   margin: 0 auto;
@@ -63,11 +74,18 @@
 .mr-2 { margin-right: 0.5rem}
 .mr-3 { margin-right: 1rem }
 
+.mr-center {
+  margin: 0px auto;
+}
 
 /*text*/
 .text-center { text-align: center }
 
 /*width*/
+.full-width {
+  width: 100%;
+  --width: 100%;
+}
 .max-width-400 {
   max-width: 400px;
   --max-width: 400px;
@@ -85,10 +103,18 @@
   max-width: 640px;
   --max-width: 640px;
 }
+.max-width-720 {
+  max-width: 720px;
+  --max-width: 720px;
+}
 
 .min-width-400 {
   min-width: 400px;
   --min-width: 400px;
+}
+.min-width-560 {
+  min-width: 560px;
+  --min-width: 560px;
 }
 
 /*color*/
@@ -96,4 +122,9 @@
   color: black;
   --color: black;
 
+}
+
+.color-blue {
+  color: #673AB7;
+  --color: #673AB7;
 }

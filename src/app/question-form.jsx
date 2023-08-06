@@ -1,49 +1,102 @@
-import { useOutletContext, useLoaderData } from 'react-router-dom'
-import { fetchQuestion }  from '../service';
+import { useEffect } from 'react';
+import { useOutletContext, useLoaderData, useFetcher, useActionData } from 'react-router-dom'
+import { fetchQuestion, updateAnswer }  from '../service';
 
 export async function loader({request, params}) {
-  console.log('loader is loaded', params);
+  //console.log('loader is loaded', params);
   return fetchQuestion(params.id);
 }
 export async function action({request, params}) {
-  console.log('action invoked', params);
-  return null;
-
+  let formData = await request.formData();
+  let {userAnswerIndex, ...formObj} = Object.fromEntries(formData);
+  console.log(formObj);
+  return updateAnswer({...formObj, userAnswerIndex: Number(userAnswerIndex)});
 }
+
+function Timer({init})  {
+  return (
+    <div>
+      <time className='timer'>30</time>
+    </div>
+  )
+};
 
 
 export default function QuestionForm() {
-  let { onQuestionSubmit } = useOutletContext();
-  let  question = useLoaderData();
+  let { onQuestionSubmit  } = useOutletContext();
+  let questionObject = useLoaderData() || {};
+  let actionData = useActionData();
+  let fetcher = useFetcher();
 
-  let handleSubmit = function(e) {
-    e.preventDefault();
-    let formData = new FormData(e.target);
-    let formObj = Object.fromEntries(formData);
-    onQuestionSubmit(formObj);
-  }
+  let {
+    question_id: id, 
+    question, 
+    choices=[],
+    userAnswerIndex,
+    hint,
+    isCorrect,
+    index,
+  } = questionObject;
+
+  console.log(questionObject);
+
+  //let handleSubmit = function(e) {
+  //  e.preventDefault();
+  //  let formData = new FormData(e.target);
+  //  let formObj = Object.fromEntries(formData);
+  //  onQuestionSubmit({id, ...formObj});
+  //}
 
   return (
     <>
-      <section className='feedback mb-4'>
+      <section className='feedback flex mb-2 mt-5 min-width-560'>
+        <h6 className='h6 flex-max color-blue'>Hint: {hint}</h6>
+        <Timer init={30}/>
       </section>
       <section className='question-answer '>
-        <form onSubmit={handleSubmit}>
-          <div className='card card--border'>
+        <fetcher.Form method='post'>
+          <div className='card card--border mb-2'>
             <p className='bold mb-3'> 
-              {question.question}
+              {index + 1}. {question}
             </p>
-            <div className='input-group'>
-              <div className='input-container'>
-                <input type='radio' name='x' value='Options1' className='mr-1'></input>
-                <label htmlFor='x' className='color-black'>Options1</label>
-              </div>
+            <div className='input-group flex justify-content-evenly flex-wrap'>
+              { choices.map((choice, i) => (
+                <div className='input-container mb-1 mr-1' key={i}>
+                  <input 
+                    type='radio' 
+                    name='userAnswerIndex' 
+                    value={i} 
+                    className='mr-1' 
+                    defaultChecked={(i === userAnswerIndex)}
+                    disabled={isCorrect !== undefined}
+                  >
+                  </input>
+                  <label htmlFor='answer' className='color-black'>{choice}</label>
+                </div>
+              ))
+              }
             </div>
           </div>
-          <div>
-            <button className='btn-md btn--border primary' type='submit'>SUBMIT</button>
+          <div className='flex justify-content-center'>
+            <button 
+              className='btn-md btn--border primary mr-3' 
+              type='submit' 
+              name='id' 
+              value={id}
+              disabled={isCorrect !== undefined}
+            >
+              SUBMIT
+            </button>
+            <button 
+              className='btn-md btn--border secondary' 
+              type='submit' 
+              name='id' 
+              value={id}
+            >
+              NEXT
+            </button>
           </div>
-        </form>
+        </fetcher.Form>
       </section>
     </>
   );

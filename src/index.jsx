@@ -12,7 +12,7 @@ import ErrorPage from './error-page.jsx';
 // Routes
 
 import LandingPage from './app/landing-page.jsx';
-import QuestionForm, {loader as questionLoader }from './app/question-form.jsx';
+import QuestionForm, {loader as questionLoader, action as updateAnswer } from './app/question-form.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +29,7 @@ const router = createBrowserRouter(
         path='/questions/:id'
         element={<QuestionForm />}
         loader={questionLoader}
+        action={updateAnswer}
       />
     </Route>
   )

@@ -1,7 +1,7 @@
 .card {
   width: var(--width, 100%);
   max-width: var(--max-width, 640px);
-  min-width: var(--min-width, 400px);
+  min-width: var(--min-width, 560px);
   padding: var(--padding, 1rem);
 }
 
