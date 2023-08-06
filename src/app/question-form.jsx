@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useOutletContext, useLoaderData, useFetcher, useActionData, useSubmit } from 'react-router-dom'
+import { useOutletContext, useLoaderData, useFetcher, useActionData, useSubmit, useNavigate } from 'react-router-dom'
 import { fetchQuestion, updateAnswer }  from '../service';
 import Timer from './timer.jsx';
 
@@ -30,12 +30,13 @@ function Feedback({hintMessage, expiredMessage, responseMessage}) {
 }
 
 export default function QuestionForm() {
-  let { onQuestionSubmit  } = useOutletContext();
+  let { questionList  } = useOutletContext();
   let questionObject = useLoaderData() || {};
   let actionData = useActionData();
   let fetcher = useFetcher();
   let submit = useSubmit();
   let ref = useRef();
+  let navigate = useNavigate();
 
   let [expiredMessage, setExpiredMessage ] = useState('');
   let [hintMessage, setHintMessage ] = useState('');
@@ -65,15 +66,16 @@ export default function QuestionForm() {
   let isSubmitted = isCorrect !== undefined;
   let initialTimer = isSubmitted ? 0 : 30;
   let responseMessage = isSubmitted && (isCorrect ? `You are correct!! Ans: ${choices[answer_index]}`: `Wrong answer :( Right Answer: ${choices[answer_index]}`)
-  console.log('responseMessage', isSubmitted, isCorrect);
   
 
-  //let handleSubmit = function(e) {
-  //  e.preventDefault();
-  //  let formData = new FormData(e.target);
-  //  let formObj = Object.fromEntries(formData);
-  //  onQuestionSubmit({id, ...formObj});
-  //}
+  let handleNext = function(e) {
+    e.preventDefault();
+    let nextId = questionList[index + 1];
+    if(nextId) {
+      return navigate(`/questions/${nextId}`);
+    };
+    navigate('/'); // navigate to finish page
+  };
 
   return (
     <>
@@ -121,6 +123,7 @@ export default function QuestionForm() {
               type='submit' 
               name='id' 
               value={id}
+              onClick={handleNext}
             >
               NEXT
             </button>
