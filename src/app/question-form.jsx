@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useOutletContext, useLoaderData, useFetcher, useActionData } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react';
+import { useOutletContext, useLoaderData, useFetcher, useActionData, useSubmit } from 'react-router-dom'
 import { fetchQuestion, updateAnswer }  from '../service';
+import Timer from './timer.jsx';
 
 export async function loader({request, params}) {
   //console.log('loader is loaded', params);
@@ -9,43 +10,35 @@ export async function loader({request, params}) {
 export async function action({request, params}) {
   let formData = await request.formData();
   let {userAnswerIndex, ...formObj} = Object.fromEntries(formData);
-  console.log(formObj);
+  console.log({userAnswerIndex, ...formObj});
   return updateAnswer({...formObj, userAnswerIndex: Number(userAnswerIndex)});
 }
 
-function Timer({init})  {
-  let [time, setTime] = useState(init);
-  let [ intervalId, setIntervalId ] = useState();
-  useEffect(() => {
-    let intervalId = setInterval(() => {
-      setTime(prev => prev - 1);
-    }, 1000);
-    setIntervalId(intervalId);
-    return function() {
-      clearInterval(intervalId);
-    };
-  }, [init])
 
-  useEffect(() => {
-    console.log('time expired', time, time < 0, intervalId);
-    if(time <= 0) {
-      clearInterval(intervalId);
-    }
-  }, [time])
+function Feedback({hintMessage, expiredMessage, responseMessage}) {
+  if(responseMessage) {
+    return <h6 className='h6 flex-max color-blue'>{responseMessage}</h6>
+  };
+  if(expiredMessage) {
+    return <h6 className='h6 flex-max color-red'>Time Expired</h6>
+  };
+  if(hintMessage) {
+    return <h6 className='h6 flex-max color-blue'>Hint: {hintMessage}</h6>
+  };
+  return <h6 className='h6 flex-max color-blue'>Choose one option</h6>
 
-  return (
-    <div>
-      <time className='timer'>{time}</time>
-    </div>
-  )
-};
-
+}
 
 export default function QuestionForm() {
   let { onQuestionSubmit  } = useOutletContext();
   let questionObject = useLoaderData() || {};
   let actionData = useActionData();
   let fetcher = useFetcher();
+  let submit = useSubmit();
+  let ref = useRef();
+
+  let [expiredMessage, setExpiredMessage ] = useState('');
+  let [hintMessage, setHintMessage ] = useState('');
 
   let {
     question_id: id, 
@@ -55,9 +48,25 @@ export default function QuestionForm() {
     hint,
     isCorrect,
     index,
+    answer_index,
   } = questionObject;
 
-  console.log(questionObject);
+  //console.log(questionObject);
+  let handleHintTimeEvent = function() {
+    setHintMessage(hint);
+  };
+
+  let handleTimerExpiry = function() {
+    console.log('expired');
+    setHintMessage('');
+    setExpiredMessage('Time Expired!! Auto Submitting...');
+    submit(ref.current);
+  };
+  let isSubmitted = isCorrect !== undefined;
+  let initialTimer = isSubmitted ? 0 : 30;
+  let responseMessage = isSubmitted && (isCorrect ? `You are correct!! Ans: ${choices[answer_index]}`: `Wrong answer :( Right Answer: ${choices[answer_index]}`)
+  console.log('responseMessage', isSubmitted, isCorrect);
+  
 
   //let handleSubmit = function(e) {
   //  e.preventDefault();
@@ -68,11 +77,11 @@ export default function QuestionForm() {
 
   return (
     <>
-      <section className='feedback flex mb-2 mt-5 min-width-560'>
-        <h6 className='h6 flex-max color-blue'>Hint: {hint}</h6>
-        <Timer init={10}/>
+      <section className='feedback flex mb-2 mt-4'>
+        <Feedback hintMessage={hintMessage} expiredMessage={expiredMessage} responseMessage={responseMessage}/>
+        <Timer init={initialTimer} onTimerExpiry={handleTimerExpiry} onHintTimeEvent={handleHintTimeEvent}/>
       </section>
-      <section className='question-answer '>
+      <section className='question-answer full-width'>
         <fetcher.Form method='post'>
           <div className='card card--border mb-2'>
             <p className='bold mb-3'> 
@@ -80,7 +89,7 @@ export default function QuestionForm() {
             </p>
             <div className='input-group flex justify-content-evenly flex-wrap'>
               { choices.map((choice, i) => (
-                <div className='input-container mb-1 mr-1' key={i}>
+                <div className='input-container mb-1 mr-2' key={i}>
                   <input 
                     type='radio' 
                     name='userAnswerIndex' 
@@ -103,6 +112,7 @@ export default function QuestionForm() {
               name='id' 
               value={id}
               disabled={isCorrect !== undefined}
+              ref={ref}
             >
               SUBMIT
             </button>

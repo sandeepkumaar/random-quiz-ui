@@ -36,6 +36,7 @@ const randomiseArray = function(arr=[], count=0) {
 
 //let questionsById = {};
 const fetchRandomQuestions = rest.get(`${host}/random/questions`, async function(req, res, ctx) {
+  await localforage.clear();
   const { count } = Object.fromEntries(req.url.searchParams);
   let randomQuizs = randomiseArray(questions, Number(count));
   randomQuizs = randomQuizs.map((q, index) => ({
@@ -70,7 +71,7 @@ const updateAnswer = rest.post(`${host}/random/question/answer`, async function(
   
   let isCorrect = false;
   if(question.answer_index === userAnswerIndex) {
-    question.isCorrect = true;
+    isCorrect = true;
   };
   question = {...question, isCorrect, userAnswerIndex};
   
