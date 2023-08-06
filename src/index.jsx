@@ -6,10 +6,13 @@ import {
 } from 'react-router-dom'
 
 import '../css/index.css'
-import App from './app';
+import App  from './app/index.jsx';
 import ErrorPage from './error-page.jsx';
 
 // Routes
+
+import LandingPage from './app/landing-page.jsx';
+import QuestionForm, {loader as questionLoader }from './app/question-form.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,9 +21,16 @@ const router = createBrowserRouter(
       element={<App/>}
       errorElement={<ErrorPage/>}
     >
-      
+      <Route
+        index={true}
+        element={<LandingPage />}
+      />
+      <Route
+        path='/questions/:id'
+        element={<QuestionForm />}
+        loader={questionLoader}
+      />
     </Route>
-
   )
 )
 

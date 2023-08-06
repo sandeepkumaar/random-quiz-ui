@@ -1,5 +1,6 @@
 import { rest } from 'msw';
 import { delayRes } from './utils';
+import groupBy from 'just-group-by';
 
 
 const host = 'http://localhost:4000'
@@ -32,17 +33,31 @@ const randomiseArray = function(arr=[], count=0) {
   return randomArray;
 };
 
+let questionsById = {};
 const fetchRandomQuestions = rest.get(`${host}/random/questions`, async function(req, res, ctx) {
-  const { q: count } = Object.fromEntries(req.url.searchParams);
+  const { count } = Object.fromEntries(req.url.searchParams);
   let randomQuiz = randomiseArray(questions, Number(count));
+  let ids = randomQuiz.map(({question_id}) => question_id);
+  questionsById = groupBy(randomQuiz, ({question_id}) => question_id);
+  //console.log('asdfsdfsfd', questionsById);
   return delayRes(
     ctx.status(200),
-    ctx.json(randomQuiz)
+    ctx.json(ids)
   )
 })
 
+const fetchQuestion = rest.get(`${host}/random/question/:id`, async function(req, res, ctx) {
+  let {id} = req.params;
+  let question = questionsById[id] ?  questionsById[id][0] : {} ;
+
+  return delayRes(
+    ctx.status(200),
+    ctx.json(question)
+  )
+})
 const handlers = [
   fetchRandomQuestions,
+  fetchQuestion,
 
 ];
 
