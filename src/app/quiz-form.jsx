@@ -54,8 +54,6 @@ export default function QuizForm() {
   let navigation = useNavigation();
   let componentState = getState(actionData);
 
-
-
   let {
     question_id: id, 
     question, 
@@ -72,7 +70,6 @@ export default function QuizForm() {
     submit(ref.current)
   }
    
-  console.log('navigationStates', navigation.state);
   const submitButtonText =
     navigation.state === "submitting"
     ? "Submitting..."
