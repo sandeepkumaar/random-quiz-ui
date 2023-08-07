@@ -1,32 +1,7 @@
-import { Route, Routes, Outlet, useLoaderData, useActionData, useNavigate, useParams} from 'react-router-dom';
-import { useState, useEffect } from 'react'
-
-import { fetchRandomQuestions }  from '../service';
+import { Outlet } from 'react-router-dom';
 
 
 export default function App() {
-
-  let [ questionList, setQuestionList ] = useState([]);
-  let navigate = useNavigate();
-  useEffect(() => {
-    if(!questionList.length) return;
-
-    let id = questionList[0];
-    //console.log('effect', id, questionList); 
-    navigate(`/questions/${id}`);
-  }, [questionList])
-
-
-
-  let handleCountSubmit = function({count}) {
-    fetchRandomQuestions(Number(count)).then(resp => {
-      setQuestionList(resp);
-    })
-  };
-
-
-
-
   return (
     <div className='app-container app-container--single'>
       <header className="app__header header  primary">
@@ -34,12 +9,10 @@ export default function App() {
       </header>
 
       <main className="app__main main max-width-720 mr-center background align-items-center">
-        <Outlet context={{
-          onCountSubmit: handleCountSubmit, 
-          questionList,
-        }}/>
+        <Outlet/>
       </main>
     </div>
   );
 }
 
+//onCountSubmit: handleCountSubmit, 

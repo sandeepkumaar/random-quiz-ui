@@ -11,27 +11,36 @@ import ErrorPage from './error-page.jsx';
 
 // Routes
 
-import LandingPage  from './app/landing-page.jsx';
-import QuestionForm, {loader as questionLoader, action as updateAnswer } from './app/question-form.jsx';
+import QuizStartPage, { createQuestionsAction }   from './app/quiz-start-page.jsx';
+import QuestionList,  {loader as questionsLoader, action as questionAction } from './app/questions.jsx';
+import QuizForm, { quizLoader, submitAnswerAction } from './app/quiz-form.jsx';
 import ResultsPage, { loader as resultLoader }  from './app/results.jsx';
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      path='/'
       element={<App/>}
       errorElement={<ErrorPage/>}
     >
       <Route
-        index={true}
-        element={<LandingPage />}
+        path='/'
+        element={<QuizStartPage />}
+        action={createQuestionsAction}
       />
       <Route
-        path='/questions/:id'
-        element={<QuestionForm />}
-        loader={questionLoader}
-        action={updateAnswer}
-      />
+        path='/questions'
+        element={<QuestionList />}
+        loader={questionsLoader}
+        action={questionAction}
+      >
+        <Route
+          path=':id'
+          element={<QuizForm />}
+          loader={quizLoader}
+          action={submitAnswerAction}
+        />
+      </Route>
       <Route
         path='/results'
         element={<ResultsPage/>}
@@ -50,3 +59,12 @@ export default function Root() {
     <RouterProvider router={router}/>
   )
 };
+/*
+
+<Route
+  path=':id'
+  element={<QuestionChild/>}
+  loader={childLoader}
+  action={childAction}
+/>
+*/

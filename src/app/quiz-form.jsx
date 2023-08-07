@@ -1,13 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
-import { useOutletContext, useLoaderData, useFetcher, useActionData, useSubmit, useNavigate } from 'react-router-dom'
+import { useOutletContext, useLoaderData, useFetcher, useActionData, useSubmit, useNavigate, redirect } from 'react-router-dom'
 import { fetchQuestion, updateAnswer }  from '../service';
 import Timer from './timer.jsx';
 
-export async function loader({request, params}) {
+export async function quizLoader({request, params}) {
   //console.log('loader is loaded', params);
-  return fetchQuestion(params.id);
+  let {status, quiz } = await fetchQuestion(params.id);
+  if(!quiz) {
+    return redirect('/');
+  }
+  return quiz;
+
 }
-export async function action({request, params}) {
+export async function submitAnswerAction({request, params}) {
   let formData = await request.formData();
   let {userAnswerIndex, ...formObj} = Object.fromEntries(formData);
   console.log({userAnswerIndex, ...formObj});
@@ -29,10 +34,9 @@ function Feedback({hintMessage, expiredMessage, responseMessage}) {
 
 }
 
-export default function QuestionForm() {
-  let navigate = useNavigate();
-  let { questionList  } = useOutletContext();
-  let questionObject = useLoaderData() || {};
+export default function QuizForm() {
+  let {  onNextQuestion  } = useOutletContext();
+  let quiz = useLoaderData() || {};
   let fetcher = useFetcher();
   let submit = useSubmit();
   let ref = useRef();
@@ -49,7 +53,7 @@ export default function QuestionForm() {
     isCorrect,
     index,
     answer_index,
-  } = questionObject;
+  } = quiz;
 
 
 
@@ -62,7 +66,7 @@ export default function QuestionForm() {
     console.log('expired');
     setHintMessage('');
     setExpiredMessage('Time Expired!! Auto Submitting...');
-    submit(ref.current);
+    fetcher.submit(ref.current);
   };
   let isSubmitted = isCorrect !== undefined;
   let initialTimer = isSubmitted ? 0 : 30;
@@ -71,11 +75,7 @@ export default function QuestionForm() {
 
   let handleNext = function(e) {
     e.preventDefault();
-    let nextId = questionList[index + 1];
-    if(nextId) {
-      return navigate(`/questions/${nextId}`);
-    };
-    navigate('../results'); // navigate to finish page
+    onNextQuestion();
   };
 
   return (
@@ -85,7 +85,7 @@ export default function QuestionForm() {
         <Timer key={id}init={initialTimer} onTimerExpiry={handleTimerExpiry} onHintTimeEvent={handleHintTimeEvent}/>
       </section>
       <section className='question-answer full-width'>
-        <fetcher.Form method='post'>
+        <fetcher.Form method='post' ref={ref} >
           <div className='card card--border mb-2'>
             <p className='bold mb-3'> 
               {index + 1}. {question}
@@ -102,6 +102,7 @@ export default function QuestionForm() {
                   >
                   </input>
                   <label htmlFor='userAnswerIndex' className='color-black'>{choice}</label>
+                  <input type='hidden' name='id' value={id}></input>
                 </div>
               ))
               }
@@ -111,17 +112,16 @@ export default function QuestionForm() {
             <button 
               className='btn-md btn--border primary mr-3' 
               type='submit' 
-              name='id' 
-              value={id}
+              name='intent' 
+              value='update'
               disabled={isCorrect !== undefined}
-              ref={ref}
             >
               SUBMIT
             </button>
             <button 
               className='btn-md btn--border secondary' 
-              name='id' 
-              value={id}
+              name='intent' 
+              value='navigate'
               onClick={handleNext}
             >
               NEXT

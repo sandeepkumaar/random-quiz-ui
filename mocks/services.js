@@ -35,66 +35,89 @@ const randomiseArray = function(arr=[], count=0) {
 };
 
 //let questionsById = {};
-const fetchRandomQuestions = rest.get(`${host}/random/questions`, async function(req, res, ctx) {
+const createQuestions = rest.post(`${host}/questions/create`, async function(req, res, ctx) {
   await localforage.clear();
-  const { count } = Object.fromEntries(req.url.searchParams);
-  let randomQuizs = randomiseArray(questions, Number(count));
-  randomQuizs = randomQuizs.map((q, index) => ({
+  const {count} = req.body;
+  let randomQuizList = randomiseArray(questions, Number(count));
+  randomQuizList = randomQuizList.map((q, index) => ({
     ...q,
     index
   }));
-  let ids = randomQuizs.map(({question_id}) => question_id);
-  let questionsById = groupBy(randomQuizs, ({question_id}) => question_id);
-  await localforage.setItem('questionsById', questionsById);
+
+  //const { count } = Object.fromEntries(req.url.searchParams);
+  //let ids = randomQuizs.map(({question_id}) => question_id);
+  //let questionsById = groupBy(randomQuizs, ({question_id}) => question_id);
+  //await localforage.setItem('questionsById', questionsById);
   //console.log('asdfsdfsfd', questionsById);
+  await localforage.setItem('randomQuizList', randomQuizList);
+  let ids =  randomQuizList.map(({question_id}) => question_id);
   return delayRes(
     ctx.status(200),
-    ctx.json(ids)
+    ctx.json({
+      status: 'ok',
+      totalCount: randomQuizList.length,
+      ids,
+    })
   )
 })
 
-const fetchQuestion = rest.get(`${host}/random/question/:id`, async function(req, res, ctx) {
+const fetchQuestion = rest.get(`${host}/questions/:id`, async function(req, res, ctx) {
   let {id} = req.params;
-  let questionsById = await localforage.getItem('questionsById');
-  let question = questionsById[id] ?  questionsById[id][0] : {} ;
+  let randomQuizList = await localforage.getItem('randomQuizList');
+  //let question = questionsById[id] ?  questionsById[id][0] : {} ;
+  //let quiz = randomQuizList[index];
+
+  //console.log('fetchQuestion', id);
+  let quiz = randomQuizList.find(({question_id}) => {
+    //console.log(question_id);
+    return question_id === Number(id);
+  })
 
   return delayRes(
     ctx.status(200),
-    ctx.json(question)
+    ctx.json({
+      status: "ok",
+      quiz
+    })
   )
 })
 
-const updateAnswer = rest.post(`${host}/random/question/answer`, async function(req, res, ctx) {
+const updateAnswer = rest.put(`${host}/questions`, async function(req, res, ctx) {
   let {id, userAnswerIndex} = req.body;
-  let questionsById = await localforage.getItem('questionsById');
-  let question = questionsById[id] ?  questionsById[id][0] : {} ;
+  let randomQuizList = await localforage.getItem('randomQuizList');
+  let quiz = randomQuizList.find(({question_id}) => {
+    console.log(question_id);
+    return question_id === Number(id);
+  })
+
   
   let isCorrect = false;
-  if(question.answer_index === userAnswerIndex) {
+  if(quiz.answer_index === userAnswerIndex) {
     isCorrect = true;
   };
-  question = {...question, isCorrect, userAnswerIndex};
+  quiz = {...quiz, isCorrect, userAnswerIndex};
   
-  questionsById[id] = [question];
-  await localforage.setItem('questionsById', questionsById);
+  let quizIndex = quiz.index;
+  randomQuizList[quizIndex] = quiz;
+  await localforage.setItem('randomQuizList', randomQuizList);
 
   return delayRes(
     ctx.status(200),
-    ctx.json(question)
+    ctx.json(quiz)
   )
 })
 
 const fetchResults = rest.get(`${host}/results`, async function(req, res, ctx) {
-  let questionsById = await localforage.getItem('questionsById');
-  let values = Object.values(questionsById);
+  let randomQuizList = await localforage.getItem('randomQuizList');
+  //let values = Object.values(questionsById);
 
   return delayRes(
     ctx.status(200),
-    ctx.json(values.flat())
+    ctx.json(randomQuizList)
   )
 })
 const handlers = [
-  fetchRandomQuestions,
+  createQuestions,
   fetchQuestion,
   updateAnswer,
   fetchResults,

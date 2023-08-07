@@ -1,13 +1,16 @@
-import { Form, useOutletContext } from 'react-router-dom';
+import { Form, redirect } from 'react-router-dom';
+import { createQuestions} from '../service'
 
-export default function LandingPage() {
-  let { onCountSubmit } = useOutletContext();
-  let handleSubmit = function(e) {
-    e.preventDefault();
-    let formData = new FormData(e.target);
-    let formObject = Object.fromEntries(formData);
-    onCountSubmit(formObject);
-  }
+export async function createQuestionsAction({request}) {
+  let formData = await request.formData();
+  let {count} = Object.fromEntries(formData);
+  //console.log('createQuestionAction', count);
+  let { status, totalCount, indices } = await createQuestions(count);
+  return redirect(`/questions/${indices[0]}`)
+}
+
+
+export default function QuizStartPage() {
   return (
     <>
       <h4 className='h4 text-center mb-4 mt-4'>Welcome to Roman Empire</h4>
@@ -20,13 +23,13 @@ export default function LandingPage() {
         </ul>
       </section>
       <section className='start-form'>
-        <form className='form' onSubmit={handleSubmit}>
+        <Form className='form' method='post' action='/questions'>
           <p className='mb-1'> Please Enter the number of questions</p>
           <div className='flex justify-content-evenly'>
             <input className='input-sm input--border' name="count" type='number' required defaultValue='0'></input>
             <button className='btn-md btn--border primary' type='submit'>START</button>
           </div>
-        </form>
+        </Form>
       </section>
     </>
 
