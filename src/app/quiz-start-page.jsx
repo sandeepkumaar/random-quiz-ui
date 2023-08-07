@@ -1,13 +1,4 @@
-import { Form, redirect } from 'react-router-dom';
-import { createQuestions} from '../service'
-
-export async function createQuestionsAction({request}) {
-  let formData = await request.formData();
-  let {count} = Object.fromEntries(formData);
-  //console.log('createQuestionAction', count);
-  let { status, totalCount, indices } = await createQuestions(count);
-  return redirect(`/questions/${indices[0]}`)
-}
+import { Form } from 'react-router-dom';
 
 
 export default function QuizStartPage() {

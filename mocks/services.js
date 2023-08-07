@@ -86,7 +86,7 @@ const updateAnswer = rest.put(`${host}/questions`, async function(req, res, ctx)
   let {id, userAnswerIndex} = req.body;
   let randomQuizList = await localforage.getItem('randomQuizList');
   let quiz = randomQuizList.find(({question_id}) => {
-    console.log(question_id);
+    //console.log(question_id);
     return question_id === Number(id);
   })
 

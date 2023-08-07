@@ -16,7 +16,10 @@ export async function submitAnswerAction({request, params}) {
   let formData = await request.formData();
   let {userAnswerIndex, ...formObj} = Object.fromEntries(formData);
   console.log({userAnswerIndex, ...formObj});
-  return updateAnswer({...formObj, userAnswerIndex: Number(userAnswerIndex)})
+  return updateAnswer({...formObj, userAnswerIndex: Number(userAnswerIndex)}).then(resp => {
+    console.log('resp', resp);
+    return resp;
+  })
 }
 
 
@@ -25,7 +28,7 @@ function Feedback({hintMessage, expiredMessage, responseMessage}) {
     return <h6 className='h6 flex-max color-blue'>{responseMessage}</h6>
   };
   if(expiredMessage) {
-    return <h6 className='h6 flex-max color-red'>Time Expired</h6>
+    return <h6 className='h6 flex-max color-red'>{expiredMessage}</h6>
   };
   if(hintMessage) {
     return <h6 className='h6 flex-max color-blue'>Hint: {hintMessage}</h6>
@@ -36,10 +39,12 @@ function Feedback({hintMessage, expiredMessage, responseMessage}) {
 
 export default function QuizForm() {
   let {  onNextQuestion  } = useOutletContext();
-  let quiz = useLoaderData() || {};
+  let quiz = useLoaderData();
   let fetcher = useFetcher();
   let submit = useSubmit();
   let ref = useRef();
+
+  let useActionData();
 
   let [expiredMessage, setExpiredMessage ] = useState('');
   let [hintMessage, setHintMessage ] = useState('');
@@ -53,7 +58,7 @@ export default function QuizForm() {
     isCorrect,
     index,
     answer_index,
-  } = quiz;
+  } = quiz || {};
 
 
 
@@ -81,8 +86,8 @@ export default function QuizForm() {
   return (
     <>
       <section className='feedback flex mb-2 mt-4'>
-        <Feedback hintMessage={hintMessage} expiredMessage={expiredMessage} responseMessage={responseMessage}/>
-        <Timer key={id}init={initialTimer} onTimerExpiry={handleTimerExpiry} onHintTimeEvent={handleHintTimeEvent}/>
+        <Feedback key={id + Math.random()} hintMessage={hintMessage} expiredMessage={expiredMessage} responseMessage={responseMessage}/>
+        <Timer key={id + Math.random()}init={initialTimer} onTimerExpiry={handleTimerExpiry} onHintTimeEvent={handleHintTimeEvent}/>
       </section>
       <section className='question-answer full-width'>
         <fetcher.Form method='post' ref={ref} >

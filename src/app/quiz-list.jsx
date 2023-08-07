@@ -2,17 +2,8 @@ import { useEffect, useState } from 'react'
 import { useLoaderData, useActionData, Outlet, useNavigate } from 'react-router-dom';
 import { createQuestions} from '../service'
 
-export async function loader({request}) {
-  //let formData = await request.formData();
-  //let formObj = Object.fromEntries(formData);
-  //console.log('loader is called', formObj);
-  //return formObj;
-  let {url, method } = request;
-  console.log('loader is called', url, method);
-  return { url, method };
-}
 
-export async function action({request}) {
+export async function createQuestionsAction({request}) {
   let formData = await request.formData();
   let { count } = Object.fromEntries(formData);
   return await createQuestions(count);
@@ -27,13 +18,13 @@ export default function Questions() {
   useEffect(() => {
     if(!actionData) return;
     let {ids} = actionData || {};
-    console.log('--------', ids,);
+    //console.log('--------', ids,);
     setQuestionIds(ids);
   }, [actionData])
 
   useEffect(() => {
     if(!questionIds) return;
-    console.log('nextIndex', currentIndex);
+    //console.log('nextIndex', currentIndex);
     let currentId = questionIds[currentIndex];
     if(currentId) {
       return navigate(`/questions/${currentId}`)
@@ -42,13 +33,12 @@ export default function Questions() {
   }, [currentIndex, questionIds])
 
   let handleNextClick = function() {
-    console.log('next question', currentIndex, questionIds);
+    //console.log('next question', currentIndex, questionIds);
     setCurrentIndex(prevIndex => {
       return prevIndex + 1;
     })
   }
   
-  //console.log(loaderData, actionData);
   return (
     <> 
       <Outlet context={{

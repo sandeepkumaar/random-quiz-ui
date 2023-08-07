@@ -11,10 +11,10 @@ import ErrorPage from './error-page.jsx';
 
 // Routes
 
-import QuizStartPage, { createQuestionsAction }   from './app/quiz-start-page.jsx';
-import QuestionList,  {loader as questionsLoader, action as questionAction } from './app/questions.jsx';
+import QuizStartPage from './app/quiz-start-page.jsx';
+import QuizList,  { createQuestionsAction } from './app/quiz-list.jsx';
 import QuizForm, { quizLoader, submitAnswerAction } from './app/quiz-form.jsx';
-import ResultsPage, { loader as resultLoader }  from './app/results.jsx';
+import ResultsPage, { resultLoader }  from './app/results.jsx';
 
 
 const router = createBrowserRouter(
@@ -30,9 +30,8 @@ const router = createBrowserRouter(
       />
       <Route
         path='/questions'
-        element={<QuestionList />}
-        loader={questionsLoader}
-        action={questionAction}
+        element={<QuizList />}
+        action={createQuestionsAction}
       >
         <Route
           path=':id'

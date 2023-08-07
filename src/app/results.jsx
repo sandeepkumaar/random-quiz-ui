@@ -1,7 +1,7 @@
 import { useLoaderData, Link } from 'react-router-dom'
 import { fetchResults } from '../service';
 
-export async function loader({request, params}) {
+export async function resultLoader({request, params}) {
   let questionList = await fetchResults();
   return { questionList };
 
