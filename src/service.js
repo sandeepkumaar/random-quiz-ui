@@ -15,3 +15,9 @@ export async function updateAnswer(payload) {
     body: payload
   });
 };
+
+export async function fetchResults() {
+  return fetchJson(`/results`, { 
+    method: 'GET'
+  });
+};

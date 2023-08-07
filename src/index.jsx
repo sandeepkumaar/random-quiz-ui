@@ -13,7 +13,7 @@ import ErrorPage from './error-page.jsx';
 
 import LandingPage  from './app/landing-page.jsx';
 import QuestionForm, {loader as questionLoader, action as updateAnswer } from './app/question-form.jsx';
-//import QuestionLayout from './app/question-layout.jsx';
+import ResultsPage, { loader as resultLoader }  from './app/results.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +31,11 @@ const router = createBrowserRouter(
         element={<QuestionForm />}
         loader={questionLoader}
         action={updateAnswer}
+      />
+      <Route
+        path='/results'
+        element={<ResultsPage/>}
+        loader={resultLoader}
       />
     </Route>
   )

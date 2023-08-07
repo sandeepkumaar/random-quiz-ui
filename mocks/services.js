@@ -84,10 +84,20 @@ const updateAnswer = rest.post(`${host}/random/question/answer`, async function(
   )
 })
 
+const fetchResults = rest.get(`${host}/results`, async function(req, res, ctx) {
+  let questionsById = await localforage.getItem('questionsById');
+  let values = Object.values(questionsById);
+
+  return delayRes(
+    ctx.status(200),
+    ctx.json(values.flat())
+  )
+})
 const handlers = [
   fetchRandomQuestions,
   fetchQuestion,
   updateAnswer,
+  fetchResults,
 
 ];
 

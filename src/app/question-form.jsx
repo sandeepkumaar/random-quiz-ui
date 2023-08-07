@@ -75,7 +75,7 @@ export default function QuestionForm() {
     if(nextId) {
       return navigate(`/questions/${nextId}`);
     };
-    navigate('/'); // navigate to finish page
+    navigate('../results'); // navigate to finish page
   };
 
   return (
