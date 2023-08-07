@@ -137,8 +137,8 @@ const fetchResults = rest.get(`${host}/results`, async function(req, res, ctx) {
 const handlers = [
   createQuestions,
   fetchQuestion,
-  //updateAnswer,
-  updateAnswerError,
+  updateAnswer,
+  //updateAnswerError,
   fetchResults,
 
 ];
