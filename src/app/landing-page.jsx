@@ -1,17 +1,4 @@
 import { Form, useOutletContext } from 'react-router-dom';
-///import { fetchRandomQuestions }  from '../service';
-
-//export async function loader({request, params}) {
-//
-//  console.log('loader is loaded');
-//  return null;
-//
-//}
-//export async function action({request, params}) {
-//  console.log('action invoked', params);
-//  return { questionList: [1, 2, 3]};
-//
-//}
 
 export default function LandingPage() {
   let { onCountSubmit } = useOutletContext();

@@ -24,12 +24,6 @@ export default function App() {
     })
   };
 
-  //let handleQuestionSubmit = function(obj) {
-  //  console.log('questionSubmit', obj);
-  //  setSelectedIndex((prevIndex) => {
-  //    return prevIndex + 1;
-  //  })
-  //}
 
 
 
