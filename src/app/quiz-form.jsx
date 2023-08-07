@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { useOutletContext, useLoaderData, useFetcher, useActionData, useSubmit, useNavigate, redirect } from 'react-router-dom'
+import { useOutletContext, Form, useLoaderData, useFetcher, useActionData, useSubmit, useNavigate, redirect, useNavigation } from 'react-router-dom'
 import { fetchQuestion, updateAnswer }  from '../service';
-import Timer from './timer.jsx';
+import QuizFeedback from './quiz-feedback.jsx';
+import { getNextQuizId, clearStorage } from './utils.js';
 
 export async function quizLoader({request, params}) {
   //console.log('loader is loaded', params);
@@ -12,42 +13,48 @@ export async function quizLoader({request, params}) {
   return quiz;
 
 }
+
 export async function submitAnswerAction({request, params}) {
   let formData = await request.formData();
-  let {userAnswerIndex, ...formObj} = Object.fromEntries(formData);
-  console.log({userAnswerIndex, ...formObj});
-  return updateAnswer({...formObj, userAnswerIndex: Number(userAnswerIndex)}).then(resp => {
-    console.log('resp', resp);
-    return resp;
-  })
+  let formObj = Object.fromEntries(formData);
+  let {userAnswerIndex, id } = formObj;
+  let updateResp = await updateAnswer({...formObj, userAnswerIndex: Number(userAnswerIndex)})
+    .catch(e => {
+      console.log('error', e);
+      return {
+        status: e.status,
+        message: e.message
+      };
+    })
+  let nextId = await getNextQuizId(id);
+  console.log('nextId', nextId);
+  if(nextId) {
+    return redirect(`/questions/${nextId}`);
+  };
+  await clearStorage
+  return redirect('/results');
 }
 
 
-function Feedback({hintMessage, expiredMessage, responseMessage}) {
-  if(responseMessage) {
-    return <h6 className='h6 flex-max color-blue'>{responseMessage}</h6>
-  };
-  if(expiredMessage) {
-    return <h6 className='h6 flex-max color-red'>{expiredMessage}</h6>
-  };
-  if(hintMessage) {
-    return <h6 className='h6 flex-max color-blue'>Hint: {hintMessage}</h6>
-  };
-  return <h6 className='h6 flex-max color-blue'>Choose one option</h6>
-
+let getState = function(actionData) {
+  let {status} = actionData || {};
+  if(!status) return "idle";
+  return status === 'OK'
+    ? "success" 
+    : "error"
 }
 
 export default function QuizForm() {
-  let {  onNextQuestion  } = useOutletContext();
+  //let {  onNextQuestion  } = useOutletContext();
   let quiz = useLoaderData();
   let fetcher = useFetcher();
   let submit = useSubmit();
   let ref = useRef();
+  let actionData = useActionData();
+  let navigation = useNavigation();
+  let componentState = getState(actionData);
 
-  let useActionData();
 
-  let [expiredMessage, setExpiredMessage ] = useState('');
-  let [hintMessage, setHintMessage ] = useState('');
 
   let {
     question_id: id, 
@@ -61,36 +68,23 @@ export default function QuizForm() {
   } = quiz || {};
 
 
-
-  //console.log(questionObject);
-  let handleHintTimeEvent = function() {
-    setHintMessage(hint);
-  };
-
   let handleTimerExpiry = function() {
-    console.log('expired');
-    setHintMessage('');
-    setExpiredMessage('Time Expired!! Auto Submitting...');
-    fetcher.submit(ref.current);
-  };
-  let isSubmitted = isCorrect !== undefined;
-  let initialTimer = isSubmitted ? 0 : 30;
-  let responseMessage = isSubmitted && (isCorrect ? `You are correct!! Ans: ${choices[answer_index]}`: `Wrong answer :( Right Answer: ${choices[answer_index]}`)
-  
-
-  let handleNext = function(e) {
-    e.preventDefault();
-    onNextQuestion();
-  };
+    submit(ref.current)
+  }
+   
+  console.log('navigationStates', navigation.state);
+  const submitButtonText =
+    navigation.state === "submitting"
+    ? "Submitting..."
+    : navigation.state === "loading"
+    ? "Submitted"
+    : "Submit";
 
   return (
     <>
-      <section className='feedback flex mb-2 mt-4'>
-        <Feedback key={id + Math.random()} hintMessage={hintMessage} expiredMessage={expiredMessage} responseMessage={responseMessage}/>
-        <Timer key={id + Math.random()}init={initialTimer} onTimerExpiry={handleTimerExpiry} onHintTimeEvent={handleHintTimeEvent}/>
-      </section>
+      <QuizFeedback id={id} hint={hint} key={id} onTimerExpiry={handleTimerExpiry}/>
       <section className='question-answer full-width'>
-        <fetcher.Form method='post' ref={ref} >
+        <Form method='post' ref={ref} >
           <div className='card card--border mb-2'>
             <p className='bold mb-3'> 
               {index + 1}. {question}
@@ -103,7 +97,6 @@ export default function QuizForm() {
                     name='userAnswerIndex' 
                     value={i} 
                     className='mr-1' 
-                    disabled={isCorrect !== undefined}
                   >
                   </input>
                   <label htmlFor='userAnswerIndex' className='color-black'>{choice}</label>
@@ -121,18 +114,10 @@ export default function QuizForm() {
               value='update'
               disabled={isCorrect !== undefined}
             >
-              SUBMIT
-            </button>
-            <button 
-              className='btn-md btn--border secondary' 
-              name='intent' 
-              value='navigate'
-              onClick={handleNext}
-            >
-              NEXT
+              {submitButtonText}
             </button>
           </div>
-        </fetcher.Form>
+        </Form>
       </section>
     </>
   );

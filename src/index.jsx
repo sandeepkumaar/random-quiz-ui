@@ -11,8 +11,8 @@ import ErrorPage from './error-page.jsx';
 
 // Routes
 
-import QuizStartPage from './app/quiz-start-page.jsx';
-import QuizList,  { createQuestionsAction } from './app/quiz-list.jsx';
+import QuizStartPage , { createQuestionsAction }from './app/quiz-start-page.jsx';
+import QuizList   from './app/quiz-list.jsx';
 import QuizForm, { quizLoader, submitAnswerAction } from './app/quiz-form.jsx';
 import ResultsPage, { resultLoader }  from './app/results.jsx';
 
@@ -21,25 +21,20 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       element={<App/>}
+      path='/'
       errorElement={<ErrorPage/>}
     >
       <Route
-        path='/'
+        index={true}
         element={<QuizStartPage />}
         action={createQuestionsAction}
       />
       <Route
-        path='/questions'
-        element={<QuizList />}
-        action={createQuestionsAction}
-      >
-        <Route
-          path=':id'
-          element={<QuizForm />}
-          loader={quizLoader}
-          action={submitAnswerAction}
-        />
-      </Route>
+        path="/questions/:id"
+        element={<QuizForm />}
+        loader={quizLoader}
+        action={submitAnswerAction}
+      />
       <Route
         path='/results'
         element={<ResultsPage/>}

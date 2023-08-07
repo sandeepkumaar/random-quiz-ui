@@ -3,11 +3,6 @@ import { useLoaderData, useActionData, Outlet, useNavigate } from 'react-router-
 import { createQuestions} from '../service'
 
 
-export async function createQuestionsAction({request}) {
-  let formData = await request.formData();
-  let { count } = Object.fromEntries(formData);
-  return await createQuestions(count);
-}
 export default function Questions() {
   //let {} =  = useLoaderData();
   let actionData = useActionData();

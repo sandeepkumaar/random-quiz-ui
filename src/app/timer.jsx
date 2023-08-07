@@ -9,9 +9,11 @@ export default function Timer({init, onTimerExpiry, onHintTimeEvent})  {
     let intervalId = setInterval(() => {
       setTime(prev => prev - 1);
     }, 1000);
+    console.log('timer created', intervalId);
     setIntervalId(intervalId);
     return function() {
-      clearInterval(intervalId);
+      let r = clearInterval(intervalId);
+      console.log('timerMount cleared', r, intervalId);
     };
   }, [init])
 
@@ -22,7 +24,8 @@ export default function Timer({init, onTimerExpiry, onHintTimeEvent})  {
       onHintTimeEvent();
     }
     if(time <= 0) {
-      clearInterval(intervalId);
+      let r = clearInterval(intervalId);
+      console.log('timerEpired cleared', r, intervalId);
       onTimerExpiry();
     }
   }, [time])

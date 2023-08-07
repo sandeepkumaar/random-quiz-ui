@@ -1,5 +1,17 @@
-import { Form } from 'react-router-dom';
+import { Form, redirect } from 'react-router-dom';
+import {createQuestions} from '../service'
+import localforage from 'localforage'
 
+
+export async function createQuestionsAction({request}) {
+  let formData = await request.formData();
+  let { count } = Object.fromEntries(formData);
+  let resp =  await createQuestions(count);
+  let {status, totalCount, ids } = resp;
+  await localforage.setItem('quizIdList', ids);
+  await localforage.setItem('quizListCount', totalCount);
+  return redirect(`/questions/${ids[0]}`);
+}
 
 export default function QuizStartPage() {
   return (
@@ -14,7 +26,7 @@ export default function QuizStartPage() {
         </ul>
       </section>
       <section className='start-form'>
-        <Form className='form' method='post' action='/questions'>
+        <Form className='form' method='post'>
           <p className='mb-1'> Please Enter the number of questions</p>
           <div className='flex justify-content-evenly'>
             <input className='input-sm input--border' name="count" type='number' required defaultValue='0'></input>

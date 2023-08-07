@@ -54,7 +54,7 @@ const createQuestions = rest.post(`${host}/questions/create`, async function(req
   return delayRes(
     ctx.status(200),
     ctx.json({
-      status: 'ok',
+      status: 'OK',
       totalCount: randomQuizList.length,
       ids,
     })
@@ -76,7 +76,7 @@ const fetchQuestion = rest.get(`${host}/questions/:id`, async function(req, res,
   return delayRes(
     ctx.status(200),
     ctx.json({
-      status: "ok",
+      status: "OK",
       quiz
     })
   )
@@ -103,10 +103,26 @@ const updateAnswer = rest.put(`${host}/questions`, async function(req, res, ctx)
 
   return delayRes(
     ctx.status(200),
-    ctx.json(quiz)
+    ctx.json({
+      status: 'OK',
+      quiz,
+    })
+
   )
 })
 
+const updateAnswerError = rest.put(`${host}/questions`, async function(req, res, ctx) {
+return delayRes(
+  ctx.status(500),
+  ctx.json({
+    status: 'Internal Server Error',
+    message: 'something went wrong',
+  })
+
+)
+
+
+})
 const fetchResults = rest.get(`${host}/results`, async function(req, res, ctx) {
   let randomQuizList = await localforage.getItem('randomQuizList');
   //let values = Object.values(questionsById);
@@ -120,6 +136,7 @@ const handlers = [
   createQuestions,
   fetchQuestion,
   updateAnswer,
+  //updateAnswerError,
   fetchResults,
 
 ];
