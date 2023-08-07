@@ -41,7 +41,7 @@ export default function QuizStartPage() {
         <Form className='form' method='post'>
           <p className='mb-1'> Please Enter the number of questions</p>
           <div className='flex justify-content-evenly'>
-            <input className='input-sm input--border' name="count" type='number' min='0' required defaultValue='0'></input>
+            <input className='input-sm input--border' name="count" type='number' min='5' max='15' required defaultValue='5'></input>
             <button className='btn-md btn--border primary' type='submit'>{submitButtonText}</button>
           </div>
         </Form>
