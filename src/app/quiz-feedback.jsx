@@ -2,7 +2,7 @@ import {useState} from 'react'
 import Timer from './timer.jsx'
 import classnames from 'classnames';
 
-export default function QuizFeedback({id, hint, onTimerExpiry}) {
+export default function QuizFeedback({id, hint, onTimerExpiry, errorMessage}) {
   let initialTimer = 30;
   let [feedbackDetail, setFeedbackDetail ] = useState({
     message: 'Choose an option',
@@ -32,10 +32,16 @@ export default function QuizFeedback({id, hint, onTimerExpiry}) {
 
   return (
     <section className='feedback flex mb-2 mt-4'>
-      <h6 className={className}>{ feedbackDetail.message}</h6>
+      { errorMessage ? (
+        <h6 className='h6 flex-max color-red'>{ errorMessage}</h6>
+      ) : (
+        <h6 className={className}>{ feedbackDetail.message}</h6>
+
+      )}
       <Timer 
         key={id} 
         init={initialTimer} 
+        errorMessage={errorMessage}
         onTimerExpiry={handleTimerExpiry} 
         onHintTimeEvent={handleHintTimeEvent}
       />

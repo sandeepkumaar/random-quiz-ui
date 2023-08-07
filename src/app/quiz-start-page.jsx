@@ -1,5 +1,6 @@
-import { Form, redirect } from 'react-router-dom';
+import { Form, redirect, useNavigation, useActionData } from 'react-router-dom';
 import {createQuestions} from '../service'
+import { getComponentState } from './utils.js';
 import localforage from 'localforage'
 
 
@@ -14,6 +15,17 @@ export async function createQuestionsAction({request}) {
 }
 
 export default function QuizStartPage() {
+  let navigation = useNavigation();
+  let actionData = useActionData();
+  let componentState = getComponentState(actionData, navigation);
+
+
+  const submitButtonText =
+    componentState === "submitting"
+    ? "Get Ready..."
+    : componentState === "submitted"
+    ? "Go !!"
+    : "Start";
   return (
     <>
       <h4 className='h4 text-center mb-4 mt-4'>Welcome to Roman Empire</h4>
@@ -29,8 +41,8 @@ export default function QuizStartPage() {
         <Form className='form' method='post'>
           <p className='mb-1'> Please Enter the number of questions</p>
           <div className='flex justify-content-evenly'>
-            <input className='input-sm input--border' name="count" type='number' required defaultValue='0'></input>
-            <button className='btn-md btn--border primary' type='submit'>START</button>
+            <input className='input-sm input--border' name="count" type='number' min='0' required defaultValue='0'></input>
+            <button className='btn-md btn--border primary' type='submit'>{submitButtonText}</button>
           </div>
         </Form>
       </section>

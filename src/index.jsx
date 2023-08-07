@@ -12,7 +12,6 @@ import ErrorPage from './error-page.jsx';
 // Routes
 
 import QuizStartPage , { createQuestionsAction }from './app/quiz-start-page.jsx';
-import QuizList   from './app/quiz-list.jsx';
 import QuizForm, { quizLoader, submitAnswerAction } from './app/quiz-form.jsx';
 import ResultsPage, { resultLoader }  from './app/results.jsx';
 
@@ -53,12 +52,3 @@ export default function Root() {
     <RouterProvider router={router}/>
   )
 };
-/*
-
-<Route
-  path=':id'
-  element={<QuestionChild/>}
-  loader={childLoader}
-  action={childAction}
-/>
-*/

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 
-export default function Timer({init, onTimerExpiry, onHintTimeEvent})  {
+export default function Timer({init, onTimerExpiry, onHintTimeEvent, errorMessage})  {
   let [time, setTime] = useState(init);
   let [ intervalId, setIntervalId ] = useState();
   useEffect(() => {
@@ -9,11 +9,11 @@ export default function Timer({init, onTimerExpiry, onHintTimeEvent})  {
     let intervalId = setInterval(() => {
       setTime(prev => prev - 1);
     }, 1000);
-    console.log('timer created', intervalId);
+    console.log('setInterval', intervalId);
     setIntervalId(intervalId);
     return function() {
       let r = clearInterval(intervalId);
-      console.log('timerMount cleared', r, intervalId);
+      console.log('clearInterval unMount', r, intervalId);
     };
   }, [init])
 
@@ -24,11 +24,17 @@ export default function Timer({init, onTimerExpiry, onHintTimeEvent})  {
       onHintTimeEvent();
     }
     if(time <= 0) {
-      let r = clearInterval(intervalId);
-      console.log('timerEpired cleared', r, intervalId);
+      clearInterval(intervalId);
+      console.log('clearInterval TimerExpired', intervalId);
       onTimerExpiry();
     }
   }, [time])
+
+  useEffect(() => {
+    if(!errorMessage) return;
+    console.log('clearInterval on Error',intervalId);
+    clearInterval(intervalId);
+  }, [errorMessage])
 
   return (
     <div>

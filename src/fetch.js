@@ -12,8 +12,9 @@ const jsonifyOpts = function(opts) {
 };
 
 const getResponseError = async function(response) {
-  let { status, statusText } = response;
-  let e = Object.assign(Error(statusText), {status});
+  let { ok=false, status=500, statusText='Internal Server Error' } = response;
+  //console.log(ok, status, statusText, 'response');
+  let e = Object.assign(Error(statusText), {status, ok});
   let data;
   try {
     // data is expected to be an error json {message, name, ...}
