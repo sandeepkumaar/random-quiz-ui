@@ -85,7 +85,7 @@ export default function QuizForm() {
             <p className='bold mb-3'> 
               {index + 1}. {question}
             </p>
-            <fieldset className='input-group flex justify-content-evenly flex-wrap' disabled={componentState === 'submitting'}>
+            <fieldset className='input-group flex justify-content-evenly flex-wrap' disabled={componentState === 'submitting' || componentState === 'submitted'}>
               { choices.map((choice, i) => (
                 <div className='input-container mb-1 mr-2' key={choice + i}>
                   <input 
@@ -108,7 +108,7 @@ export default function QuizForm() {
               type='submit' 
               name='intent' 
               value='update'
-              disabled={isCorrect !== undefined}
+              disabled={componentState === 'submitting' || componentState === 'submitted'}
             >
               {submitButtonText}
             </button>
