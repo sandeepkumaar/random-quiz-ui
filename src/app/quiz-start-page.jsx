@@ -32,9 +32,9 @@ export default function QuizStartPage() {
       <section className='instruction card card--border flex-center-lr mb-2'>
         <h5 className='h5 mb-1'> Instructions</h5>
         <ul className='sub-2 ml-2'>
-          <li>=> Each question has 4 multiple choices to choose from</li>
-          <li>=> You have 30 seconds to answer</li>
-          <li>=> You will be provided with a hint for the last 10 seconds.</li>
+          <li>=&gt; Each question has 4 multiple choices to choose from</li>
+          <li>=&gt; You have 30 seconds to answer</li>
+          <li>=&gt; You will be provided with a hint for the last 10 seconds."</li>
         </ul>
       </section>
       <section className='start-form'>

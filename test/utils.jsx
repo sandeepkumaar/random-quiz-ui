@@ -1,5 +1,7 @@
+/*msw should be imported before others to take effect before loader calls*/
+import mockServer from '../mocks/node.js';
+
 import { GlobalRegistrator } from '@happy-dom/global-registrator';
-import test from "tape";
 import { render, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import {
@@ -12,9 +14,13 @@ import {
 
 export function domRender(jsx, teardown) {
   // setup
+  mockServer.listen();
+  //mockServer.printHandlers();
   GlobalRegistrator.register();
+  //location.href = 'http://localhost:5173'
   const user = userEvent.setup({document: globalThis.document}) // opts generally not needed. but throws error other
   teardown(() => {
+    mockServer.close()
     cleanup();
     GlobalRegistrator.unregister();
   });
