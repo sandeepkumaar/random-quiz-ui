@@ -1,7 +1,15 @@
-/*msw should be imported before others to take effect before loader calls*/
+/**
+ * fakeIndexedDb is imported before, since our mocks uses localforage
+ * msw should be imported before others to take effect before loader calls
+*/
+import "fake-indexeddb/auto"; // cleanup is done domRender
 import mockServer from '../mocks/node.js';
 
-import { GlobalRegistrator } from '@happy-dom/global-registrator';
+import setupDOM from './setup-dom'
+import setupfakeIndexedDB from './setup-idb.js'
+
+
+
 import { render, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import {
@@ -15,15 +23,19 @@ import {
 export function domRender(jsx, teardown) {
   // setup
   mockServer.listen();
-  //mockServer.printHandlers();
-  GlobalRegistrator.register();
-  //location.href = 'http://localhost:5173'
-  const user = userEvent.setup({document: globalThis.document}) // opts generally not needed. but throws error other
+  let cleanupIndexedDB = setupfakeIndexedDB();
+  let cleanupDom = setupDOM({
+    url: 'http://localhost:5173'
+  });
+  const user = userEvent.setup({document: global.document}) // opts generally not needed. but throws error other
+
   teardown(() => {
     mockServer.close()
     cleanup();
-    GlobalRegistrator.unregister();
+    cleanupIndexedDB();
+    cleanupDom();
   });
+
   return {
     screen: render(jsx),
     user,
@@ -31,7 +43,7 @@ export function domRender(jsx, teardown) {
 };
 
 /**
- * To test components which uses react router Componets like Link, etc
+ * Non-Data router
 */
 export function domRenderWithRouter(jsx, teardown) {
   let jsxWithRouter = (
@@ -42,7 +54,9 @@ export function domRenderWithRouter(jsx, teardown) {
   return domRender(jsxWithRouter, teardown);
 }
 
-
+/**
+ * Testing Data router
+*/
 export function domRenderWithRouterProvider(routes, teardown) {
   let router = createMemoryRouter(routes);
   return domRender(<RouterProvider router={router} />, teardown);

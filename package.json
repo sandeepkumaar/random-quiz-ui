@@ -5,7 +5,7 @@
   "main": "main.jsx",
   "scripts": {
     "start": "run-s build serve",
-    "start:local": "vite --debug --force",
+    "start:local": "vite --debug",
     "build": "vite build",
     "serve": "vite preview",
     "test": "cross-env NODE_ENV=test tape -r ./esbuild-register.js 'src/**/*.test.+(js|jsx)'",
@@ -27,27 +27,28 @@
   "license": "ISC",
   "dependencies": {
     "classnames": "^2.3.2",
-    "cross-env": "^7.0.3",
     "just-group-by": "^2.2.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.14.0",
+    "react-router-dom": "^6.15.0",
     "sort-by": "^1.2.0"
   },
   "devDependencies": {
-    "@happy-dom/global-registrator": "^9.20.3",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/react": "^18.2.14",
-    "@vitejs/plugin-react": "^4.0.0",
+    "@types/react": "^18.2.20",
+    "@vitejs/plugin-react": "^4.0.4",
+    "cross-env": "^7.0.3",
     "esbuild-register": "^3.4.2",
+    "fake-indexeddb": "^4.0.2",
+    "happy-dom": "^10.9.0",
     "localforage": "^1.10.0",
-    "msw": "^1.2.2",
+    "msw": "^1.2.3",
     "npm-run-all": "^4.1.5",
     "tap-nirvana": "^1.1.0",
-    "tape": "^5.6.3",
-    "vite": "^4.3.1"
+    "tape": "^5.6.6",
+    "vite": "^4.4.9"
   },
   "msw": {
     "workerDirectory": "public"
