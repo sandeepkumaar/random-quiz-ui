@@ -9,6 +9,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "cross-env NODE_ENV=test tape -r ./esbuild-register.js 'src/**/*.test.+(js|jsx)'",
+    "test:e2e": "playwright test",
     "lint": "echo 'eslint-prettier-tsc'",
     "functional-test": "echo playwright",
     "docker-build": "docker build -t react-starter-vite .",
@@ -27,14 +28,12 @@
   "license": "ISC",
   "dependencies": {
     "classnames": "^2.3.2",
-    "just-group-by": "^2.2.0",
-    "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
-    "sort-by": "^1.2.0"
+    "react-router-dom": "^6.15.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.37.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.2.20",
@@ -46,7 +45,7 @@
     "localforage": "^1.10.0",
     "msw": "^1.2.3",
     "npm-run-all": "^4.1.5",
-    "tap-nirvana": "^1.1.0",
+    "playwright": "^1.37.0",
     "tape": "^5.6.6",
     "vite": "^4.4.9"
   },
